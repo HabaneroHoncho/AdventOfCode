@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace AdventOfCode
 {
@@ -8,17 +10,17 @@ namespace AdventOfCode
         static void Main(string[] args)
         {
             Day1(startingFrequency:0);
-            Console.WriteLine("Hello World!");
         }
         
         static void Day1(int startingFrequency)        
         {
-            int result = startingFrequency;
+            IList<int> frequencies = new List<int>();
+            int delta = 0;
+            int frequency = 0;
 
             using (FileStream fileStream = new FileStream("input.txt", FileMode.Open))
             {
                 string line;
-                int delta = 0;
 
                 using (StreamReader reader = new StreamReader(fileStream))
                 {
@@ -26,12 +28,55 @@ namespace AdventOfCode
                     {                        
                         if(int.TryParse(line, out delta))
                         {
-                            result += delta;
+                            frequencies.Add(delta);
                         }
                     }                    
                 }                
-           }          
-           System.Console.WriteLine($"Resulting frequency is {result}"); 
+           }
+           frequency = ApplyFrequencyChanges(frequencies,startingFrequency); 
+           int first  = FindFirstDuplicate(frequencies);
+
+           System.Console.WriteLine($"Day 1: Resulting frequency is {frequency}"); 
+           System.Console.WriteLine($"     : {first} is the first frequency to be reached twice"); 
         } 
+
+        static int ApplyFrequencyChanges(IList<int>frequencyChanges,int target)
+        {
+            int resultingFrequency= 0;
+
+            foreach(int frequencyDelta in frequencyChanges)
+            {
+                resultingFrequency +=  frequencyDelta;
+            }
+
+            return resultingFrequency;
+        }
+
+        static int FindFirstDuplicate(IList<int>frequencyChanges)
+        {
+            int resultingFrequency= 0;
+            IList<int> frequencies = new List<int>();
+            bool found =false;
+            
+             while (!found)
+             {
+                foreach(int frequencyChange in frequencyChanges)
+                {
+
+                    resultingFrequency +=  frequencyChange;
+
+                    if(frequencies.Contains(resultingFrequency))
+                     {
+                         found = true;
+                         break;
+                     }
+
+                    frequencies.Add(resultingFrequency);
+                }   
+             }
+
+            return resultingFrequency;
+
+        }
     }
 }
