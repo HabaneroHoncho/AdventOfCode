@@ -9,7 +9,9 @@ namespace AdventOfCode
     {
         static void Main(string[] args)
         {
-            Day1(startingFrequency:0);
+            //Day1(startingFrequency:0);
+            var day2 = new Day2();
+            day2.Run();
         }
         
         static void Day1(int startingFrequency)        
